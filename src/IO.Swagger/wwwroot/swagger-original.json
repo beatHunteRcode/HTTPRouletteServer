@@ -1,0 +1,217 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is API for casino game Roulette.",
+    "version" : "1.0.0",
+    "title" : "Roulette API"
+  },
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/register" : {
+      "post" : {
+        "summary" : "Register a client as PLAYER or CROUPIER",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "UserType",
+          "in" : "query",
+          "description" : "Type of a registrated user. PLAYER = 1; CROUPIER = 2;",
+          "required" : true,
+          "type" : "number",
+          "enum" : [ 1.0, 2.0 ]
+        }, {
+          "name" : "Username",
+          "in" : "query",
+          "description" : "Name of a registered user",
+          "required" : true,
+          "type" : "string",
+          "maxLength" : 20,
+          "minLength" : 3
+        }, {
+          "name" : "Password",
+          "in" : "query",
+          "description" : "Password of a registered user",
+          "required" : true,
+          "type" : "string",
+          "maxLength" : 20,
+          "minLength" : 3
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/announce_bets" : {
+      "get" : {
+        "summary" : "Getting info about bets from server",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/making_bet" : {
+      "post" : {
+        "summary" : "Make a bet",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "BetType",
+          "in" : "query",
+          "description" : "Type of Bet",
+          "required" : true,
+          "type" : "number",
+          "enum" : [ 0.0, 1.0, 2.0 ]
+        }, {
+          "name" : "number",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer"
+        }, {
+          "name" : "sum",
+          "in" : "query",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Bet"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/drawing" : {
+      "get" : {
+        "summary" : "Getting info from a user-Croupier that bet-time ended and he wanted to draw roulette.",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/winning_number" : {
+      "get" : {
+        "summary" : "Getting info about winning number",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "integer"
+            }
+          }
+        }
+      }
+    },
+    "/disconnect" : {
+      "get" : {
+        "summary" : "Disconnecting client",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "BetType" : {
+      "type" : "integer",
+      "description" : "Bet Type. 0 - EVEN; 1 - ODD; 2 - NUMBER",
+      "enum" : [ "0", "1", "2" ],
+      "x-enum-string" : true
+    },
+    "Bet" : {
+      "type" : "object",
+      "properties" : {
+        "BetType" : {
+          "type" : "integer"
+        },
+        "Number" : {
+          "type" : "integer"
+        },
+        "Sum" : {
+          "type" : "integer"
+        }
+      },
+      "description" : "Bet of a player",
+      "example" : {
+        "BetType" : 0,
+        "Number" : 6,
+        "Sum" : 1
+      }
+    },
+    "UserType" : {
+      "type" : "integer",
+      "description" : "User Type. 1 - PLAYER; 2 - CROUPIER",
+      "enum" : [ "1", "2" ],
+      "x-enum-string" : true
+    },
+    "User" : {
+      "type" : "object",
+      "properties" : {
+        "UserType" : {
+          "type" : "integer"
+        },
+        "Bet" : {
+          "type" : "object",
+          "description" : "Bet of a player",
+          "properties" : {
+            "BetType" : {
+              "type" : "integer"
+            },
+            "Number" : {
+              "type" : "integer"
+            },
+            "Sum" : {
+              "type" : "integer"
+            }
+          }
+        },
+        "UserName" : {
+          "type" : "string"
+        },
+        "Password" : {
+          "type" : "string"
+        }
+      },
+      "description" : "User. PLAYER or CROUPIER",
+      "example" : {
+        "Bet" : "{}",
+        "UserName" : "UserName",
+        "UserType" : 0,
+        "Password" : "Password"
+      }
+    }
+  }
+}
